@@ -24,4 +24,6 @@ npm i jsonwebtoken
 
 npm i passport-jwt
 
+npm i passport
+
 npm run server
