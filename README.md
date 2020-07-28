@@ -1,6 +1,7 @@
 ﻿# exp_Memo
 
 Dev Tool: 
+
          Data-transmission: Node, Express, JWT
          
               API tessting: POSTMAN, restFUL
