@@ -20,4 +20,6 @@ npm i bcrypt
 
 npm i gravatar
 
+npm i jsonwebtoken
+
 npm run server

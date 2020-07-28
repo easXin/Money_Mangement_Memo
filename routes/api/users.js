@@ -23,7 +23,8 @@ router.post("/register",(req,res) => {
     User.findOne({email:req.body.email})
         .then((user) => {
             if(user){
-                return res.status(400).json({email:"This email has been taken"})
+                return res.status(400)
+                            .json({email:"This email has been taken"});
             }else{
                 // 1st arg: target  => s: size , r: format, d : default {404 ; err, mm: default profile img}
                 let avatar = gravatar.url(req.body.email,{s:'200',r:'pg',d:'mm'});
@@ -64,24 +65,18 @@ router.post("/login",(req,res) =>{
         .then(user =>{
             // if email is not found
             if(!user){
-                return res.status(404).json({email:"Email is not found"});
+                return res.status(404)
+                            .json({email:"Email is not found"});
             }
             // decrypt password
-            // bcrypt.compare(password,user.password,(err,res) => {
-            //     if(password == user.password){
-            //         res.json({ msg: "Login Successful" });
-            //     }else{
-            //             return res.status(400).json({password:"Wrong password"});
-            //         }
-            // });
-            bcrypt.compare(password, user.password)
-                    .then(isMatch => {
-                        if(isMatch){
-                            res.json({msg:"Login Successful"});
-                        }else{
-                            return res.status(400).json({password:"Wrong password"});
-                        }
-                    });
+            bcrypt.compare(password, user.password, (err, result) => {
+                if (password == result) {
+                    res.json({ msg: "Login Successful" });
+                } else {
+                    return res.status(400)
+                                .json({ password: "Wrong password" });
+                }
+            });
         });
 });
 module.exports = router;
