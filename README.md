@@ -18,4 +18,6 @@ npm i mongoose
 
 npm i bcrypt
 
+npm i gravatar
+
 npm run server
