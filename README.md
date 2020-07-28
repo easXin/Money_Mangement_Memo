@@ -22,4 +22,6 @@ npm i gravatar
 
 npm i jsonwebtoken
 
+npm i passport-jwt
+
 npm run server
