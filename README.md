@@ -1,6 +1,6 @@
 ﻿# Money_Mangement_Memo
  
-Dev Tool: 
+Dev Tool: ES6
 
          Data-transmission: Node, Express, JWT
          
