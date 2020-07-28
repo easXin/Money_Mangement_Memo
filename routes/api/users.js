@@ -8,7 +8,9 @@ const User = require("../../db/User");
 const bcrypt = require("bcrypt");
 // for user profile avatar
 const gravatar = require("gravatar");
-
+// user token
+const jwt = require("jsonwebtoken");
+const secret_k = require("../../config/keys");
 // define router
 // GET api/users/login
 router.get("/test", (req, res) => {
@@ -61,22 +63,44 @@ router.post("/login",(req,res) =>{
     const email = req.body.email;
     const password = req.body.password;
     // query DB data
-    User.findOne({email})
-        .then(user =>{
-            // if email is not found
-            if(!user){
-                return res.status(404)
-                            .json({email:"Email is not found"});
+    User.findOne({ email }).then((user) => {
+      // if email is not found
+        if (!user) {
+            return res.status(404).json({ email: "Email is not found" });
+        }
+      // decrypt password
+        bcrypt.compare(password, user.password).then((isMatch) => {
+            if (isMatch) {
+            res.json({ msg: "Login Successful" });
+            } else {
+            return res.status(400).json({ password: "Wrong password" });
             }
-            // decrypt password
-            bcrypt.compare(password, user.password, (err, result) => {
-                if (password == result) {
-                    res.json({ msg: "Login Successful" });
-                } else {
-                    return res.status(400)
-                                .json({ password: "Wrong password" });
-                }
-            });
         });
+    });
+            // bcrypt.compare(password, user.password, (err, result) => {
+            //     if (password == result) {
+                    // rule, encrpt name, expire date, err,result
+                    // const rule = {
+                    //                 id:user.id,
+                    //                 name:user.name,
+                    //             }
+                    // jwt.sign(rule, secret_k.secretKey,{expiresIn:7200},(err,token) => {
+                    //     if(err){
+                    //         return res.status(404)
+                    //                     .json({token:"User credential failed"})
+                    //     }else{
+                    //         res.json({
+                    //             success:true,
+                    //             token:email+ " : "+token
+                    //         });
+                    //     }
+                    // });
+            //         res.json({ msg: "Login Successful" });
+            //     } else {
+            //         return res.status(400)
+            //                     .json({ password: "Wrong password" });
+            //     }
+            // });
+      //  });
 });
 module.exports = router;
