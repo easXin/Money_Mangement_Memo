@@ -59,7 +59,8 @@ router.post("/register",(req,res) => {
 // POST api/users/login
 // returns returns jwt token
 // desc : take user's email and password, do the comparision in the backend, if the data is matched, login successful
-router.post("/login",(req,res) =>{
+router.post("/login",(req,res) =>
+{
     const email = req.body.email;
     const password = req.body.password;
     // query DB data
@@ -69,38 +70,32 @@ router.post("/login",(req,res) =>{
             return res.status(404).json({ email: "Email is not found" });
         }
       // decrypt password
-        bcrypt.compare(password, user.password).then((isMatch) => {
+        bcrypt.compare(password, user.password).then((isMatch) =>
+        {
             if (isMatch) {
-            res.json({ msg: "Login Successful" });
+                const rule = {
+                        id:user.id,
+                        name:user.name,
+                    };
+                // desc: getting user token
+                // rule, encrpt name, expire date, err,result
+                jwt.sign(rule, secret_k.secretKey,{expiresIn:7200},(err,token) => {
+                        if(err){
+                            return res.status(404)
+                                        .json({token:"User credential failed"})
+                        }else{
+                            res.json({
+                                success:true,
+                                token:user.name+token
+                            });
+                        }
+                    });
             } else {
-            return res.status(400).json({ password: "Wrong password" });
+                return res.status(400)
+                            .json({ password: "Wrong password" });
             }
         });
     });
-            // bcrypt.compare(password, user.password, (err, result) => {
-            //     if (password == result) {
-                    // rule, encrpt name, expire date, err,result
-                    // const rule = {
-                    //                 id:user.id,
-                    //                 name:user.name,
-                    //             }
-                    // jwt.sign(rule, secret_k.secretKey,{expiresIn:7200},(err,token) => {
-                    //     if(err){
-                    //         return res.status(404)
-                    //                     .json({token:"User credential failed"})
-                    //     }else{
-                    //         res.json({
-                    //             success:true,
-                    //             token:email+ " : "+token
-                    //         });
-                    //     }
-                    // });
-            //         res.json({ msg: "Login Successful" });
-            //     } else {
-            //         return res.status(400)
-            //                     .json({ password: "Wrong password" });
-            //     }
-            // });
-      //  });
 });
+
 module.exports = router;
