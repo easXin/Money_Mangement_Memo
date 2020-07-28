@@ -8,12 +8,15 @@ const User = require("../../db/User");
 const bcrypt = require("bcrypt");
 // for user profile avatar
 const gravatar = require("gravatar");
+
 // define router
+// GET api/users/login
 router.get("/test", (req, res) => {
     res.json({msg:"login works"});
 });
 
 // use x-www-form-urlencoded to view the data in the postman
+// POST api/users/login
 router.post("/register",(req,res) => {
     //console.log(req.body);
     //res.json({msg:req.body});
@@ -34,8 +37,9 @@ router.post("/register",(req,res) => {
                 bcrypt.genSalt(10, (err, salt) => {
                     // 1st arg: target, 2nd arg: encrypt alg
                     bcrypt.hash(newUser.password, salt, (err, hash) => {
-                        if(err)
+                        if(err){
                             throw err;
+                        }
                         newUser.password = hash;
                         newUser.save()
                                 .then(user =>
@@ -48,8 +52,36 @@ router.post("/register",(req,res) => {
             }
         });
 });
+
+// POST api/users/login
+// returns returns jwt token
+// desc : take user's email and password, do the comparision in the backend, if the data is matched, login successful
+router.post("/login",(req,res) =>{
+    const email = req.body.email;
+    const password = req.body.password;
+    // query DB data
+    User.findOne({email})
+        .then(user =>{
+            // if email is not found
+            if(!user){
+                return res.status(404).json({email:"Email is not found"});
+            }
+            // decrypt password
+            // bcrypt.compare(password,user.password,(err,res) => {
+            //     if(password == user.password){
+            //         res.json({ msg: "Login Successful" });
+            //     }else{
+            //             return res.status(400).json({password:"Wrong password"});
+            //         }
+            // });
+            bcrypt.compare(password, user.password)
+                    .then(isMatch => {
+                        if(isMatch){
+                            res.json({msg:"Login Successful"});
+                        }else{
+                            return res.status(400).json({password:"Wrong password"});
+                        }
+                    });
+        });
+});
 module.exports = router;
-
-
-
-// anything starts with get is rounter 
