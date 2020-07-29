@@ -11,6 +11,7 @@ const gravatar = require("gravatar");
 // user token
 const jwt = require("jsonwebtoken");
 const secret_k = require("../../config/keys");
+const passport = require("passport");
 // define router
 // GET api/users/login
 router.get("/test", (req, res) => {
@@ -64,7 +65,7 @@ router.post("/login",(req,res) =>
     const email = req.body.email;
     const password = req.body.password;
     // query DB data
-    User.findOne({ email }).then((user) => {
+    User.findOne({ email: req.body.email }).then((user) => {
       // if email is not found
         if (!user) {
             return res.status(404).json({ email: "Email is not found" });
@@ -79,14 +80,14 @@ router.post("/login",(req,res) =>
                     };
                 // desc: getting user token
                 // rule, encrpt name, expire date, err,result
-                jwt.sign(rule, secret_k.secretKey,{expiresIn:7200},(err,token) => {
+                jwt.sign(rule, secret_k.secretKey,{expiresIn:3600},(err,token) => {
                         if(err){
                             return res.status(404)
                                         .json({token:"User credential failed"})
                         }else{
                             res.json({
                                 success:true,
-                                token:user.name+token
+                                token:"Bearer "+token
                             });
                         }
                     });
@@ -98,4 +99,13 @@ router.post("/login",(req,res) =>
     });
 });
 
+// GET api/users/current  2nd arg: validate token
+// returns current user info
+router.get("/current",passport.authenticate("jwt",{session:false}),(req,res) =>{
+    res.json({
+        id:req.user.id,
+        name:req.user.name,
+        email:req.user.email
+    });
+});
 module.exports = router;
