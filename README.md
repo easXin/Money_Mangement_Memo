@@ -1,15 +1,17 @@
 ﻿# Money_Mangement_Memo
- 
+
 Dev Tool: ES6
 
          Data-transmission: Node, Express, JWT
-         
+
               API tessting: POSTMAN, restFUL
-              
-                 Front-end: VueCli3.0, Element-UI
-                 
+
+                 Front-end: VueCli3.0, Element-UI, Boostrap
+
+                            HTML, CSS
+
                   Back-end: Axios, MongoDB
-       
+
 npm i express
 
 npm i nodemon
