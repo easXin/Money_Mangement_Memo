@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema(
         date:{
             type:String,
             default:Date.now
+        },
+        identity:{
+            type:String,
+            required:true
         }
 
     }

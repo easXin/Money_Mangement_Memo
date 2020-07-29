@@ -27,7 +27,7 @@ router.post("/register",(req,res) => {
         .then((user) => {
             if(user){
                 return res.status(400)
-                            .json({email:"This email has been taken"});
+                            .json("This email has been taken");
             }else{
                 // 1st arg: target  => s: size , r: format, d : default {404 ; err, mm: default profile img}
                 let avatar = gravatar.url(req.body.email,{s:'200',r:'pg',d:'mm'});
@@ -37,6 +37,7 @@ router.post("/register",(req,res) => {
                     email: req.body.email,
                     password: req.body.password,
                     avatar,
+                    identity:req.body.identity
                 });
                 bcrypt.genSalt(10, (err, salt) => {
                     // 1st arg: target, 2nd arg: encrypt alg
@@ -68,7 +69,7 @@ router.post("/login",(req,res) =>
     User.findOne({ email: req.body.email }).then((user) => {
       // if email is not found
         if (!user) {
-            return res.status(404).json({ email: "Email is not found" });
+            return res.status(404).json("Email is not found");
         }
       // decrypt password
         bcrypt.compare(password, user.password).then((isMatch) =>
@@ -77,6 +78,7 @@ router.post("/login",(req,res) =>
                 const rule = {
                         id:user.id,
                         name:user.name,
+                        avatar:user.avatar,
                     };
                 // desc: getting user token
                 // rule, encrpt name, expire date, err,result
@@ -93,7 +95,7 @@ router.post("/login",(req,res) =>
                     });
             } else {
                 return res.status(400)
-                            .json({ password: "Wrong password" });
+                            .json( "Wrong password");
             }
         });
     });
@@ -105,7 +107,8 @@ router.get("/current",passport.authenticate("jwt",{session:false}),(req,res) =>{
     res.json({
         id:req.user.id,
         name:req.user.name,
-        email:req.user.email
+        email:req.user.email,
+        identity: req.user.identity,
     });
 });
 module.exports = router;
