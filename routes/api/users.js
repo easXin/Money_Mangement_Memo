@@ -14,8 +14,9 @@ const secret_k = require("../../config/keys");
 const passport = require("passport");
 // define router
 // GET api/users/login
+
 router.get("/test", (req, res) => {
-    res.json({msg:"login works"});
+    res.json({msg:"login works.."});
 });
 
 // use x-www-form-urlencoded to view the data in the postman
