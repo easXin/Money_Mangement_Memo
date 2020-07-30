@@ -19,8 +19,9 @@ router.get("/test", (req, res) => {
     res.json({msg:"login works.."});
 });
 
-// use x-www-form-urlencoded to view the data in the postman
-// POST api/users/login
+// @ link api/users/register
+// @ desc use x-www-form-urlencoded to view the data in the postman
+// @ access public
 router.post("/register",(req,res) => {
     //console.log(req.body);
     //res.json({msg:req.body});
@@ -59,9 +60,10 @@ router.post("/register",(req,res) => {
         });
 });
 
-// POST api/users/login
-// returns returns jwt token
-// desc : take user's email and password, do the comparision in the backend, if the data is matched, login successful
+// @ link  api/users/login
+// @ desc : take user's email and password, do the comparision in the backend, if the data is matched, login successful
+//        returns jwt token
+// @ access public
 router.post("/login",(req,res) =>
 {
     const email = req.body.email;
@@ -102,8 +104,9 @@ router.post("/login",(req,res) =>
     });
 });
 
-// GET api/users/current  2nd arg: validate token
-// returns current user info
+// @ link  api/users/current
+// @ return returns current user info , 2nd arg: validate token
+// @ access private
 router.get("/current",passport.authenticate("jwt",{session:false}),(req,res) =>{
     res.json({
         id:req.user.id,

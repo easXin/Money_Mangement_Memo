@@ -2,10 +2,14 @@ const express = require('express');
 const router = express.Router();
 const Profile = require("../../db/Profile");
 const passport = require("passport");
+
+// @access public for testing connection
 router.get("/test", (req, res) => {
     res.json({ msg: "works...." });
 });
 
+// @link api/profiles/get
+// @access private
 router.post("/get", passport.authenticate("jwt", { session: false }), (req, res) => {
     Profile.find()
         .then(profile => {
@@ -19,6 +23,8 @@ router.post("/get", passport.authenticate("jwt", { session: false }), (req, res)
         });
 });
 
+// @link api/profiles/xxx
+// @access private
 router.post("/:id", passport.authenticate("jwt", { session: false }), (req, res) => {
     // param grad the data from frontend
     Profile.findById({_id:req.params.id})
@@ -33,6 +39,8 @@ router.post("/:id", passport.authenticate("jwt", { session: false }), (req, res)
             });
 });
 
+// @link api/profiles/add
+// @access private
 router.post("/add",  passport.authenticate("jwt", { session: false }), (req, res) => {
     const profileField ={};
     if(req.body.type){
@@ -59,7 +67,23 @@ router.post("/add",  passport.authenticate("jwt", { session: false }), (req, res
         res.json(profile);
     })
 });
+// @link api/profiles/delete/xxxxx
+// @access private
+router.post("/delete/:id", passport.authenticate("jwt", { session: false }), (req, res) => {
+    // 1. delete 2. save 3. print deleted item as alawys
+    Profile.findOneAndRemove({_id:req.params.id})
+            .then(profile =>{
+                profile.save()
+                        .then(profile =>
+                            res.json(profile));
+            })
+            .catch(err => {
+                res.status(404).json("Deletion Failure")
+            });
+});
 
+// @link api/profiles/edit/xxxxx
+// @access private
 router.post("/edit/:id", passport.authenticate("jwt", { session: false }), (req, res) => {
     const profileField = {};
     if (req.body.type) {
