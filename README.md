@@ -28,4 +28,10 @@ npm i passport-jwt
 
 npm i passport
 
-npm run server
+npm i concurrently
+
+npm i vue
+
+npm run server  : execute client side
+npm run dev     : execute server side
+
