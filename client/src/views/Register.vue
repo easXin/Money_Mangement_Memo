@@ -16,20 +16,17 @@
                     <el-form-item label="Password" prop="password">
                         <el-input type="password" v-model="registerUser.password" placeholder="Please enter your password"></el-input>
                     </el-form-item>
-                    <el-form-item label="ConfirmedPassword" prop="password2">
+                    <el-form-item label="Confirm" prop="password2">
                         <el-input type="password" v-model="registerUser.password2" placeholder="Please re-enter your password"></el-input>
                     </el-form-item>
-                    <el-form-item label="ConfirmedPassword" prop="password2">
+                    <el-form-item label="Login as " prop="password2">
                         <el-select v-model="registerUser.identity" placeholder="Select indentity">
                             <el-option label="admin" value="manager"></el-option>
                             <el-option label="employee" value="employee"></el-option>
                         </el-select>
                     </el-form-item>
-
-
-
                     <el-form-item>
-                        <el-button type="primary" class="submit_btn" @click="resetForm('ruleForm2')">Register</el-button>
+                        <el-button type="primary" class="submit_btn" @click="submitForm('ruleForm2')">Register</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -41,13 +38,93 @@
         name: "register",
         components:{},
         data(){
+            var confPassword = (rule, val, callback) => {
+                if (val !== this.registerUser.password) {
+                    callback(new Error('Two passwords don\'t match!'));
+                } else {
+                    callback();
+                }
+            };
             return{
                 registerUser:{
                     name:"",
                     email:"",
                     password:"",
-                    passwords:"",
+                    password2:"",
                     identity:""
+                },
+                // registration form validator
+                rules: {
+                    name: [
+                        {
+                            required:true,
+                            message:"Please fill out the username",
+                            trigger:'blur'
+                        },
+                        {
+                            min:2,
+                            max:30,
+                            message:"Use 2 characters or more for your username",
+                            trigger:'blur'
+                        }
+                    ],
+                    email: [
+                        {
+                            type:"email",
+                            required:true,
+                            message:"Invalid format",
+                            trigger:'blur'
+                        }
+                    ],
+                    password: [
+                        {
+                            required:true,
+                            message:'Missing password',
+                            trigger:'blur'
+                        },
+                        {
+                            min:6,
+                            max:30,
+                            message:"Use 6 or more characters for your password ",
+                            trigger:'blur'
+                        }
+                    ],
+                    password2: [
+                        {
+                            required:true,
+                            message:'Missing password',
+                            trigger:'blur'
+                        },
+                        {
+                            min:6,
+                            max:30,
+                            message:"Use 6 or more characters for your password ",
+                            trigger:'blur'
+                        },
+                        {
+                            validator:confPassword,
+                            trigger:"blur"
+                        }
+                    ],
+                    identity:[
+                        {
+                            required:true,
+                            message:"Select your identity",
+                            trigger:'blur'
+                        }
+                    ]
+                },
+                methods: {
+                    submitForm(registrationForm) {
+                        this.$refs[registrationForm].validate((valid) => {
+                        if (valid) {
+                            alert('submit!');
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                        });
+                    },
                 }
             }
         }
