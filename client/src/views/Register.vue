@@ -1,6 +1,12 @@
 <template>
-    <div class="index">
-        Default page
+    <div class="register">
+        <section class="form_container">
+            <div class="manage_tip">
+                <span class="title">
+                    Backend management system
+                </span>
+            </div>
+        </section>
     </div>
 </template>
 <script>
