@@ -26,7 +26,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item>
-                        <el-button type="primary" class="submit_btn" @click="submitForm('ruleForm2')">Register</el-button>
+                        <el-button type="primary" class="submit_btn" @click="submitForm('registerForm')">Register</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -34,6 +34,7 @@
     </div>
 </template>
 <script>
+    import axios from 'axios';
     export default {
         name: "register",
         components:{},
@@ -115,15 +116,24 @@
                     ]
                 },
                 methods: {
-                    submitForm(registrationForm) {
-                        this.$refs[registrationForm].validate((valid) => {
+                    submitForm(formName) {
+                        this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            alert('submit!');
+                            // send the data to backend
+                            this.$axios.post("/api/users/register",this.registerUser)
+                            .then(res => {
+                                // success 
+                                this.$message({
+                                    message:'Creating new account ...',
+                                    type:'success'
+                                })
+                            })
+                            this.$router.push('/login');
                         } else {
                             console.log('error submit!!');
                             return false;
                         }
-                        });
+                       });
                     },
                 }
             }
