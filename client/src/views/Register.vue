@@ -1,3 +1,4 @@
+/* eslint-disable */ 
 <template>
     <div class="register">
         <section class="form_container">
@@ -5,8 +6,13 @@
                 <span class="title">
                     Backend Management System
                 </span>
-                <!-- rules: validator  ref: take form info -->
-                <el-form :model="registerUser" :rules="rules" ref="registerForm" label-width="80px" class="registerForm">
+                <!--
+                    rules: validator  ref: take form info
+                    :model -> formName
+                    v-model : data binding
+
+                -->
+                <el-form :model="registerUser" :rules="rules" ref="registerForm" label-width="90px" class="registerForm">
                     <el-form-item label="Username" prop="name">
                         <el-input type="text" v-model="registerUser.name" placeholder="Please enter your username"></el-input>
                     </el-form-item>
@@ -19,12 +25,13 @@
                     <el-form-item label="Confirm" prop="password2">
                         <el-input type="password" v-model="registerUser.password2" placeholder="Please re-enter your password"></el-input>
                     </el-form-item>
-                    <el-form-item label="Login as " prop="password2">
+                    <el-form-item label="Login as ">
                         <el-select v-model="registerUser.identity" placeholder="Select indentity">
                             <el-option label="admin" value="manager"></el-option>
                             <el-option label="employee" value="employee"></el-option>
                         </el-select>
                     </el-form-item>
+
                     <el-form-item>
                         <el-button type="primary" class="submit_btn" @click="submitForm('registerForm')">Register</el-button>
                     </el-form-item>
@@ -34,11 +41,12 @@
     </div>
 </template>
 <script>
-    import axios from 'axios';
+/* eslint-disable */ 
     export default {
         name: "register",
         components:{},
-        data(){
+        data() {
+               // custom validator
             var confPassword = (rule, val, callback) => {
                 if (val !== this.registerUser.password) {
                     callback(new Error('Two passwords don\'t match!'));
@@ -46,7 +54,8 @@
                     callback();
                 }
             };
-            return{
+
+        return {
                 registerUser:{
                     name:"",
                     email:"",
@@ -54,91 +63,87 @@
                     password2:"",
                     identity:""
                 },
-                // registration form validator
                 rules: {
-                    name: [
-                        {
-                            required:true,
-                            message:"Please fill out the username",
-                            trigger:'blur'
-                        },
-                        {
-                            min:2,
-                            max:30,
-                            message:"Use 2 characters or more for your username",
-                            trigger:'blur'
-                        }
-                    ],
-                    email: [
-                        {
-                            type:"email",
-                            required:true,
-                            message:"Invalid format",
-                            trigger:'blur'
-                        }
-                    ],
-                    password: [
-                        {
-                            required:true,
-                            message:'Missing password',
-                            trigger:'blur'
-                        },
-                        {
-                            min:6,
-                            max:30,
-                            message:"Use 6 or more characters for your password ",
-                            trigger:'blur'
-                        }
-                    ],
-                    password2: [
-                        {
-                            required:true,
-                            message:'Missing password',
-                            trigger:'blur'
-                        },
-                        {
-                            min:6,
-                            max:30,
-                            message:"Use 6 or more characters for your password ",
-                            trigger:'blur'
-                        },
-                        {
-                            validator:confPassword,
-                            trigger:"blur"
-                        }
-                    ],
-                    identity:[
-                        {
-                            required:true,
-                            message:"Select your identity",
-                            trigger:'blur'
-                        }
-                    ]
-                },
-                methods: {
-                    submitForm(formName) {
-                        this.$refs[formName].validate((valid) => {
-                        if (valid) {
-                            // send the data to backend
-                            this.$axios.post("/api/users/register",this.registerUser)
-                            .then(res => {
-                                // success 
-                                this.$message({
-                                    message:'Creating new account ...',
-                                    type:'success'
-                                })
-                            })
-                            this.$router.push('/login');
-                        } else {
-                            console.log('error submit!!');
-                            return false;
-                        }
-                       });
-                    },
+                        name: [
+                            {
+                                required:true,
+                                message:"Please fill out the username",
+                                trigger:'blur'
+                            },
+                            {
+                                min:2,
+                                max:30,
+                                message:"Use 2 characters or more for your username",
+                                trigger:'blur'
+                            }
+                        ],
+                        email: [
+                            {
+                                type:"email",
+                                required:true,
+                                message:"Invalid format",
+                                trigger:'blur'
+                            }
+                        ],
+                        password: [
+                            {
+                                required:true,
+                                message:'Missing password',
+                                trigger:'blur'
+                            },
+                            {
+                                min:6,
+                                max:30,
+                                message:"Use 6 or more characters for your password ",
+                                trigger:'blur'
+                            }
+                        ],
+                        password2: [
+                            {
+                                required:true,
+                                message:'Missing password',
+                                trigger:'blur'
+                            },
+                            {
+                                min:6,
+                                max:30,
+                                message:"Use 6 or more characters for your password ",
+                                trigger:'blur'
+                            },
+                            {
+                                validator:confPassword,
+                                trigger:"blur"
+                            }
+                        ],
+                        identity:[
+                            {
+                                required:true,
+                                message:"Select your identity",
+                                trigger:'blur'
+                            }
+                        ]
                 }
+            };
+        },
+        methods: {
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if(valid){
+                        alert('submit!');
+                        // this.$axios.post("/api/users/register",this.registerUser)
+                        // .then(res => {
+                        //     this.$message({
+                        //         message:'Creating new account ...',type:'success'
+                        //     });
+                        // });
+                    }else{
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
             }
         }
-    };
+    }
 </script>
 
 <style scoped>
@@ -158,11 +163,7 @@
         padding:25px;
         border-radius:5px;
         text-align:center;
-
-
     }
-
-
     .form_container .manage_tip .title{
         font-family :"Microsoft YaHei";
         font-weight: bold;
