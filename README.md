@@ -1,4 +1,4 @@
-﻿# Financial_Mangement_Memo
+﻿# Money_Mangement_Memo
 
 Dev Tool: ES6
 
