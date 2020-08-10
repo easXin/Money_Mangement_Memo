@@ -47,7 +47,7 @@
         components:{},
         data() {
                // custom validator
-            var confPassword = (rule, val, callback) => {
+            var pwValidator = (rule, val, callback) => {
                 if (val !== this.registerUser.password) {
                     callback(new Error('Two passwords don\'t match!'));
                 } else {
@@ -111,7 +111,7 @@
                                 trigger:'blur'
                             },
                             {
-                                validator:confPassword,
+                                validator : pwValidator,
                                 trigger:"blur"
                             }
                         ],
@@ -126,19 +126,19 @@
             };
         },
         methods: {
+            /* eslint-disable */ 
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if(valid){
-                        alert('submit!');
-                        // this.$axios.post("/api/users/register",this.registerUser)
-                        // .then(res => {
-                        //     this.$message({
-                        //         message:'Creating new account ...',type:'success'
-                        //     });
-                        // });
-                    }else{
-                        console.log('error submit!!');
-                        return false;
+                        // make cross-origin request 
+                        this.$axios.post("/api/users/register",this.registerUser)
+                        .then(res => {
+                            this.$message({
+                                message:'Creating new account ...',
+                                type:'success'
+                            });
+                        })
+                        this.$router.push("/login");
                     }
                 });
             }
@@ -147,6 +147,10 @@
 </script>
 
 <style scoped>
+    *{
+        font-family:courier,arial,helvetica;
+        font-size:26px;
+    }
     .register{
         position: relative;
         width:100%;
@@ -164,7 +168,7 @@
         border-radius:5px;
         text-align:center;
     }
-    .form_container .manage_tip .title{
+    .form_container .manage_tip{
         font-family :"Microsoft YaHei";
         font-weight: bold;
         font-size:26px;
@@ -172,10 +176,12 @@
     }
     .registerForm{
         margin-top:20px;
-        background-color:#fff;
+        color:#fff;
+        background-color:rgb(2, 2, 2);
         padding: 20px 40px 20px 20px;
         border-radius: 5%;
         box-shadow: 0px 5px 10px #cccc;
+        opacity: 0.7;
     }
     .submit_btn{
         width:100%;

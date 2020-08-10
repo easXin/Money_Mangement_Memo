@@ -4,17 +4,17 @@
   "description": "restful api",
   "main": "server.js",
   "scripts": {
-    "client-install":"npm install --prefix client",
-    "client":"npm start --prefix client",
+    "client-install": "npm install --prefix client",
+    "client": "npm start --prefix client",
     "start": "node server",
     "server": "nodemon server",
-    "dev":"concurrently \"npm run server\" \"npm run client\""
-
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Dengxin",
   "license": "ISC",
   "dependencies": {
     "@vue/cli": "^4.4.6",
+    "axios": "^0.19.2",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "concurrently": "^5.2.0",
