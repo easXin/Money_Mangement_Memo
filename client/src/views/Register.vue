@@ -134,7 +134,7 @@
                         this.$axios.post("/api/users/register",this.registerUser)
                         .then(res => {
                             this.$message({
-                                message:'Creating new account ...',
+                                message:'Account has been created successfully',
                                 type:'success'
                             });
                         })
@@ -149,7 +149,6 @@
 <style scoped>
     *{
         font-family:courier,arial,helvetica;
-        font-size:26px;
     }
     .register{
         position: relative;
