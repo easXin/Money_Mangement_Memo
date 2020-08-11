@@ -6,9 +6,14 @@
                 <span class="title">
                     Backend Management System
                 </span>
-                <!-- model-> formName ref-> reference -->
-                <el-form :model="registerUser" :rules="rules" ref="registerForm" label-width="100px" class="registerForm">
-                    <el-form-item label="Username" prop="name" >
+                <!--
+                    rules: validator  ref: take form info
+                    :model -> formName
+                    v-model : data binding
+
+                -->
+                <el-form :model="registerUser" :rules="rules" ref="registerForm" label-width="90px" class="registerForm">
+                    <el-form-item label="Username" prop="name">
                         <el-input type="text" v-model="registerUser.name" placeholder="Please enter your username"></el-input>
                     </el-form-item>
                     <el-form-item label="Email" prop="email">
@@ -23,7 +28,7 @@
                     <el-form-item label="Login as ">
                         <el-select v-model="registerUser.identity" placeholder="Select indentity">
                             <el-option label="admin" value="manager"></el-option>
-                            <el-option label="employee" value="employee"></el-option>
+                            <el-option label="user" value="user"></el-option>
                         </el-select>
                     </el-form-item>
 
@@ -41,7 +46,7 @@
         name: "register",
         components:{},
         data() {
-               // custom validator   pw
+               // custom validator
             var pwValidator = (rule, val, callback) => {
                 if (val !== this.registerUser.password) {
                     callback(new Error('Two passwords don\'t match!'));
@@ -49,6 +54,7 @@
                     callback();
                 }
             };
+
         return {
                 registerUser:{
                     name:"",
@@ -61,7 +67,6 @@
                         name: [
                             {
                                 required:true,
-                                // promp
                                 message:"Please fill out the username",
                                 trigger:'blur'
                             },
@@ -120,26 +125,29 @@
                 }
             };
         },
-        methods: {
-            /* eslint-disable */ 
-            submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
-                    if(valid){
-                        // make cross-origin request 
-                        this.$axios.post("/api/users/register",this.registerUser)
-                        .then(res => {
-                            this.$message({
-                                message:'Creating new account ...',
-                                type:'success'
-                            });
-                        })
-                        this.$router.push("/login");
-                    }
-                });
-            }
+  methods: {
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.$axios
+            .post("/api/users/register", this.registerUser)
+            .then(res => {
+              this.$message({
+                message: "Account has been created successfully",
+                type: "success"
+              });
+               this.$router.push("/login");
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
         }
+      });
     }
+  }
+};
 </script>
+
 
 <style scoped>
     *{
@@ -163,7 +171,7 @@
         text-align:center;
     }
     .form_container .manage_tip{
-        font-family :"Microsoft YaHei";
+        font-family : courier,arial,helvetica;
         font-weight: bold;
         font-size:26px;
         color:#fff;
@@ -181,3 +189,5 @@
         width:100%;
     }
 </style>
+
+

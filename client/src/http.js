@@ -1,50 +1,45 @@
-import router from './router';
-import axios from 'axios';
-import { Loading, Message } from 'element-ui';
-let loading;
+import axios from 'axios'
+import { Message, Loading } from 'element-ui';
+import router from './router'
+
+let loading
 
 function startLoading() {
-    // options is the configuration of Loading
     loading = Loading.service({
         lock: true,
-        text: 'Loading ...',
-        background: 'rgba(0,0,0,0.7)'
-    });
+        text: 'Loading...',
+        background: 'rgba(0, 0, 0, 0.7)'
+    })
 }
-
 function endLoading() {
-    loading.close();
+    loading.close()
 }
-// use token for router defender
-// request dennies
+
 axios.interceptors.request.use(config => {
-    // load animate
-    startLoading();
-    if (localStorage.eleToken) {
-        // set header
-        config.headers.Authorization = localStorage.eleToken;
-    }
-    return config;
-}, err => {
-    return Promise.reject(err);
-});
+    startLoading()
+    if (localStorage.eleToken)
+        config.headers.Authorization = localStorage.eleToken
+    return config
+}, error => {
+    return Promise.reject(error)
+})
 
-// response dennies
 axios.interceptors.response.use(response => {
-    endLoading();
-    return response;
-}, err => {
-    endLoading();
-    Message.error(err.response.data);
+    endLoading()
+    return response
+}, error => {
+    endLoading()
+    Message.error(error.response.data)
 
-    const { status } = err.response;
-    if (status === 401) {
-        Message.error("Token is expired , please reloading");
-        localStorage.removeItem('eleToken');
+    const { status } = error.response
+    if (status == 401) {
+        Message.error('Session is expired')
+        // remove the expred token 
+        localStorage.removeItem('eleToken')
         router.push('/login')
     }
-    return Promise.reject(err);
-});
 
+    return Promise.reject(error)
+})
 
-export default axios;
+export default axios
